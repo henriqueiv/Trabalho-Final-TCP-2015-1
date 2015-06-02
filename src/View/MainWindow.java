@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package trabalhofinaltcp2015.pkg1;
+package View;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.JTextArea;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -31,7 +31,7 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
-        
+
     }
 
     /**
@@ -110,39 +110,45 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void tfFilePathMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfFilePathMouseClicked
-        System.out.println("clicou");
         JFileChooser fc = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
         fc.setFileFilter(filter);
         switch (fc.showOpenDialog(null)) {
             case JFileChooser.CANCEL_OPTION: {
+                System.out.println("JFileChooser.CANCEL_OPTION");
                 break;
             }
             case JFileChooser.APPROVE_OPTION: {
-                BufferedReader in = null;
-                try {
-                    File f = fc.getSelectedFile();
-                    tfFilePath.setText(f.getAbsolutePath());
-                    in = new BufferedReader(new FileReader(f));
-                    String line = in.readLine();
-                    while (line != null) {
-                        taTextContent.append(line + "\n");
-                        line = in.readLine();
-                    }
-                    break;
-                } catch (FileNotFoundException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
+                File f = fc.getSelectedFile();
+                String filePath = f.getName();
+                if (filePath.endsWith(".txt")) {
+                    BufferedReader in = null;
                     try {
-                        in.close();
+                        tfFilePath.setText(f.getAbsolutePath());
+                        in = new BufferedReader(new FileReader(f));
+                        String line = in.readLine();
+                        while (line != null) {
+                            taTextContent.append(line + "\n");
+                            line = in.readLine();
+                        }
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
                         Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    } finally {
+                        try {
+                            in.close();
+                        } catch (IOException ex) {
+                            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
+                } else {
+                JOptionPane.showMessageDialog(null, "Not a txt file!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                break;
             }
             case JFileChooser.ERROR_OPTION: {
+                JOptionPane.showMessageDialog(null, "Error!  No file opened.", "Error", JOptionPane.ERROR_MESSAGE);
                 break;
             }
             default: {
