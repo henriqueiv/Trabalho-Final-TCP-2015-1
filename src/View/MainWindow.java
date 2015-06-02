@@ -12,11 +12,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.jfugue.pattern.Pattern;
+import org.jfugue.player.Player;
 
 /**
  *
@@ -47,6 +50,7 @@ public class MainWindow extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         taTextContent = new javax.swing.JTextArea();
         tfFilePath = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -76,6 +80,13 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -84,7 +95,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 290, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(57, 57, 57)
                         .addComponent(btnPlay))
                     .addComponent(tfFilePath)
                     .addComponent(jScrollPane1))
@@ -98,7 +111,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnPlay)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnPlay)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -111,11 +126,11 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void tfFilePathMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfFilePathMouseClicked
         JFileChooser fc = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text files", "txt", "text");
         fc.setFileFilter(filter);
         switch (fc.showOpenDialog(null)) {
             case JFileChooser.CANCEL_OPTION: {
-                System.out.println("JFileChooser.CANCEL_OPTION");
+                // show msg? nah
                 break;
             }
             case JFileChooser.APPROVE_OPTION: {
@@ -133,17 +148,20 @@ public class MainWindow extends javax.swing.JFrame {
                         }
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     } catch (IOException ex) {
                         Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                     } finally {
                         try {
                             in.close();
                         } catch (IOException ex) {
                             Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 } else {
-                JOptionPane.showMessageDialog(null, "Not a txt file!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Not a txt file!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
             }
@@ -160,6 +178,24 @@ public class MainWindow extends javax.swing.JFrame {
     private void tfFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFilePathActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_tfFilePathActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Player player = new Player();
+        String strValidChar = "ABCDEFG";
+        Pattern pattern;
+        String str = taTextContent.getText();
+        for (int i = 0; i < str.length(); i++) {
+            char c = Character.toUpperCase(str.charAt(i));
+            if (strValidChar.indexOf(c) >= 0) {
+                pattern = new Pattern(Character.toString(c));
+                player.play(pattern);
+                System.out.println("sim: " + c);
+            } else {
+                System.out.println("nao: " + c);
+            }
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -198,6 +234,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPlay;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea taTextContent;
     private javax.swing.JTextField tfFilePath;
