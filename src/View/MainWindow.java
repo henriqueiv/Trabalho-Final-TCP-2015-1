@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -26,6 +25,8 @@ import org.jfugue.player.Player;
  * @author valcanaia
  */
 public class MainWindow extends javax.swing.JFrame {
+    
+    private static boolean vol = false;
 
     /**
      * Creates new form MainWindow
@@ -51,6 +52,7 @@ public class MainWindow extends javax.swing.JFrame {
         taTextContent = new javax.swing.JTextArea();
         tfFilePath = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -61,7 +63,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        taTextContent.setEditable(false);
         taTextContent.setColumns(20);
         taTextContent.setRows(5);
         taTextContent.setText("this text area will show the content of the selected file\n");
@@ -87,6 +88,13 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,7 +103,9 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 136, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
                         .addComponent(jButton1)
                         .addGap(57, 57, 57)
                         .addComponent(btnPlay))
@@ -113,7 +123,8 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPlay)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -139,6 +150,7 @@ public class MainWindow extends javax.swing.JFrame {
                 if (filePath.endsWith(".txt")) {
                     BufferedReader in = null;
                     try {
+                        taTextContent.setText(""); // a way to "clear" the initial message
                         tfFilePath.setText(f.getAbsolutePath());
                         in = new BufferedReader(new FileReader(f));
                         String line = in.readLine();
@@ -197,6 +209,95 @@ public class MainWindow extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        /* TODO(pedro): 
+            1 - Verify how to keep the last note played
+            2 - Dont forget to search how to turn the volume up whenever a ! is read
+        */
+        Player player = new Player();
+        Pattern pattern;
+        String str = taTextContent.getText();
+        for (int i = 0; i < str.length(); i++) {
+            char c = Character.toUpperCase(str.charAt(i));
+            switch (c) {
+                case 'A':
+                    if (vol) {
+                        pattern = new Pattern(" T120 " + Character.toString(c));
+                        player.play(pattern);
+                        System.out.println("sim: " + c);
+                    }
+                    else {
+                        pattern = new Pattern(Character.toString(c));
+                        player.play(pattern);
+                        System.out.println("sim: " + c);
+                    }
+                    break;
+                case 'B':
+                    if (vol) {
+                        pattern = new Pattern(Character.toString(c) + " X[Volume]=10200");
+                        player.play(pattern);
+                        System.out.println("sim: " + c);
+                        return;
+                    }
+                    pattern = new Pattern(Character.toString(c));
+                    player.play(pattern);
+                    System.out.println("sim: " + c);
+                    break;
+                case 'C':
+                    if (vol) {
+                        pattern = new Pattern(Character.toString(c) + " X[Volume]=10200");
+                        player.play(pattern);
+                        System.out.println("sim: " + c);
+                        return;
+                    }                    
+                    pattern = new Pattern(Character.toString(c));
+                    player.play(pattern);
+                    System.out.println("sim: " + c);
+                    break;
+                case 'D':
+                    if (vol) {
+                        pattern = new Pattern(Character.toString(c) + " X[Volume]=10200");
+                        player.play(pattern);
+                        System.out.println("sim: " + c);
+                        return;
+                    }                    
+                    pattern = new Pattern(Character.toString(c));
+                    player.play(pattern);
+                    System.out.println("sim: " + c);
+                    break;
+                case 'E':
+                    pattern = new Pattern(Character.toString(c));
+                    player.play(pattern);
+                    System.out.println("sim: " + c);
+                    break;
+                case 'F':
+                    pattern = new Pattern(Character.toString(c));
+                    player.play(pattern);
+                    System.out.println("sim: " + c);
+                    break;
+                case 'G':
+                    pattern = new Pattern(Character.toString(c));
+                    player.play(pattern);
+                    System.out.println("sim: " + c);                    
+                    break;
+                case ' ':
+                    System.out.println("sim: Just a pause, probably do not need even a case for this" + c);                    
+                    break;
+                case '!':
+                    vol = true;
+                    System.out.println("sim: " + c);                    
+                    break;
+                case ';':
+                    pattern = new Pattern(Character.toString(c));
+                    player.play(pattern);
+                    System.out.println("sim: " + c);                    
+                    break;                    
+                default:
+                    System.out.println("Verificar o que fazer com qualquer outro char que possa ser lido!");
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -235,6 +336,7 @@ public class MainWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPlay;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea taTextContent;
     private javax.swing.JTextField tfFilePath;
