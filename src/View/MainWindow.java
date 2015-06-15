@@ -262,91 +262,22 @@ public class MainWindow extends javax.swing.JFrame {
                 }
             }
             c = Character.toUpperCase(c);
+            switch (c){
+                case '!':
+                    System.out.println("Volume: " + volume);
+                case '.':
+                    System.out.println("Volume: " + volume);
+                case '?':
+                    volume += VOLUME_DIFF_RATE * 3;
+                    if (volume > VOLUME_MAX) {
+                        volume = VOLUME_MAX;
+                    }
+                    System.out.println("Volume: " + volume);
+                    break;
+                
+            }
             pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c));
             player.play(pattern);
-            switch (c){
-                case '!':{
-                    volume += VOLUME_DIFF_RATE*3;
-                }
-                case '?':{
-                    volume -= VOLUME_DIFF_RATE*3;
-                }
-            }
-//            switch (c) {
-//                case 'A':
-//                    if (vol) {
-//                        pattern = new Pattern(" X[Volume]="+volume+" " + Character.toString(c));
-//                        player.play(pattern);
-//                        System.out.println("sim: " + c);
-//                    } else {
-//                        pattern = new Pattern(Character.toString(c));
-//                        player.play(pattern);
-//                        System.out.println("sim: " + c);
-//                    }
-//                    break;
-//                case 'B':
-//                    if (vol) {
-//                        pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c));
-//                        player.play(pattern);
-//                        System.out.println("sim: " + c);
-////                        return;
-//                    }
-//                    pattern = new Pattern(Character.toString(c));
-//                    player.play(pattern);
-//                    System.out.println("sim: " + c);
-//                    break;
-//                case 'C':
-//                    if (vol) {
-//                        pattern = new Pattern(" X[Volume]=1020 " + Character.toString(c));
-//                        player.play(pattern);
-//                        System.out.println("sim: " + c);
-////                        return;
-//                    }
-//                    pattern = new Pattern(Character.toString(c));
-//                    player.play(pattern);
-//                    System.out.println("sim: " + c);
-//                    break;
-//                case 'D':
-//                    if (vol) {
-//                        pattern = new Pattern(" X[Volume]=10 " + Character.toString(c));
-//                        player.play(pattern);
-//                        System.out.println("sim: " + c);
-////                        return;
-//                    }
-//                    pattern = new Pattern(Character.toString(c));
-//                    player.play(pattern);
-//                    System.out.println("sim: " + c);
-//                    break;
-//                case 'E':
-//                    pattern = new Pattern(Character.toString(c));
-//                    player.play(pattern);
-//                    System.out.println("sim: " + c);
-//                    break;
-//                case 'F':
-//                    pattern = new Pattern(Character.toString(c));
-//                    player.play(pattern);
-//                    System.out.println("sim: " + c);
-//                    break;
-//                case 'G':
-//                    pattern = new Pattern(Character.toString(c));
-//                    player.play(pattern);
-//                    System.out.println("sim: " + c);
-//                    break;
-//                case ' ':
-//                    System.out.println("sim: Just a pause, probably do not need even a case for this" + c);
-//                    break;
-//                case '!':
-//                    vol = true;
-//                    System.out.println("sim: " + c);
-//                    break;
-//                case ';':
-//                    pattern = new Pattern(Character.toString(c));
-//                    player.play(pattern);
-//                    System.out.println("sim: " + c);
-//                    break;
-//                default:
-//                    System.out.println("Verificar o que fazer com qualquer outro char que possa ser lido!");
-//            }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
