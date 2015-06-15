@@ -34,6 +34,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private static boolean vol = false;
+    public static final int INITIAL_OCTAVE = 5;
     public static final int VOLUME_DIFF_RATE = 500;
     public static final int VOLUME_START = 10200;
     public static final int VOLUME_MIN = 8000;
@@ -240,25 +241,27 @@ public class MainWindow extends javax.swing.JFrame {
          */
         Controller controller = new Controller();
         Player player = new Player();
-        String digitValidChar = "0123456789";
         Pattern pattern;
+        String digitValidChar = "0123456789";
         String str = taTextContent.getText();
+        String oct = "";
         int volume = VOLUME_START;
+        int octave = INITIAL_OCTAVE;
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             // Se for um digito, verificar se eh par ou impar
             if (digitValidChar.indexOf(c) >= 0) {
                 int isEven = (int) c;
                 if (isEven % 2 == 0) { // se eh par
-                    // Devemos aumentar uma oitava
-                    pattern = new Pattern(Character.toString(c));
-                    player.play(pattern);
-                    System.out.println("sim: " + c);
+                    // Devemos aumentar uma oitava(0-9 / sendo o padrao 5)
+                    octave++;
+                    oct = octave + "";
+                    System.out.println("Octave: " + oct);
                 } else {
-                    // devemos diminuir uma oitava
-                    pattern = new Pattern(Character.toString(c));
-                    player.play(pattern);
-                    System.out.println("sim: " + c);
+                    // devemos diminuir uma oitava(0-9 / sendo o padrao 5)
+                    octave--;
+                    oct = octave + "";
+                    System.out.println("Octave: " + oct);
                 }
             }
             c = Character.toUpperCase(c);
@@ -285,7 +288,7 @@ public class MainWindow extends javax.swing.JFrame {
                     System.out.println("Volume: " + volume);
                     break;
             }
-            pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c));
+            pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c) + oct);
             player.play(pattern);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -294,6 +297,13 @@ public class MainWindow extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        Pattern pattern;
+        Player player = new Player();
+        pattern = new Pattern("A6");
+        player.play(pattern);
+        pattern = new Pattern("A7");
+        player.play(pattern);
+        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
