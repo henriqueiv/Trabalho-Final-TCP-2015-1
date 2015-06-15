@@ -274,7 +274,16 @@ public class MainWindow extends javax.swing.JFrame {
                     }
                     System.out.println("Volume: " + volume);
                     break;
-                
+                case ',':
+                    System.out.println("Volume: " + volume);
+                case ';':
+                    System.out.println("Volume: " + volume);
+                    volume -= VOLUME_DIFF_RATE * 3;
+                    if (volume < VOLUME_MIN) {
+                        volume = VOLUME_MIN;
+                    }
+                    System.out.println("Volume: " + volume);
+                    break;
             }
             pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c));
             player.play(pattern);
