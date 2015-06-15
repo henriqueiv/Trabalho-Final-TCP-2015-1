@@ -39,6 +39,8 @@ public class MainWindow extends javax.swing.JFrame {
     public static final int VOLUME_START = 10200;
     public static final int VOLUME_MIN = 8000;
     public static final int VOLUME_MAX = 16383;
+    public static char lastNote;
+    public static char lastValidNotePlayed;
 
     /**
      * Creates new form MainWindow
@@ -210,7 +212,6 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_tfFilePathMouseClicked
 
     private void tfFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFilePathActionPerformed
-        // TODO add your handling code here:
     }//GEN-LAST:event_tfFilePathActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -236,35 +237,33 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         /* TODO(pedro): 
-         1 - Verify how to keep the last note played
-         2 - Dont forget to search how to turn the volume up whenever a ! is read
+         1 - Verificar como manter a ultima nota VÁLIDA tocada.
          */
         Controller controller = new Controller();
         Player player = new Player();
         Pattern pattern;
         String digitValidChar = "0123456789";
+        String vogal = "IOU";
         String str = taTextContent.getText();
         String oct = "";
         int volume = VOLUME_START;
         int octave = INITIAL_OCTAVE;
         for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
+            char c = str.charAt(i);      
             // Se for um digito, verificar se eh par ou impar
             if (digitValidChar.indexOf(c) >= 0) {
                 int isEven = (int) c;
-                if (isEven % 2 == 0) { // se eh par
+                if (isEven % 2 == 0 && octave < 9) { // se eh par
                     // Devemos aumentar uma oitava(0-9 / sendo o padrao 5)
                     octave++;
                     oct = octave + "";
-                    System.out.println("Octave: " + oct);
-                } else {
+                } else if (isEven % 2 != 0 && octave > 0) {
                     // devemos diminuir uma oitava(0-9 / sendo o padrao 5)
                     octave--;
                     oct = octave + "";
-                    System.out.println("Octave: " + oct);
                 }
             }
-            c = Character.toUpperCase(c);
+            c = Character.toUpperCase(c);   
             switch (c){
                 case '!':
                 case '.':
@@ -283,9 +282,16 @@ public class MainWindow extends javax.swing.JFrame {
                     }
                     System.out.println("Volume: " + volume);
                     break;
+                default:
+                    break;
+            }
+            if (vogal.indexOf(c) >= 0) {
+                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastNote) + oct);
+                player.play(pattern);
             }
             pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c) + oct);
             player.play(pattern);
+            lastNote = c;   
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
