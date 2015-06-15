@@ -267,9 +267,7 @@ public class MainWindow extends javax.swing.JFrame {
             c = Character.toUpperCase(c);
             switch (c){
                 case '!':
-                    System.out.println("Volume: " + volume);
                 case '.':
-                    System.out.println("Volume: " + volume);
                 case '?':
                     volume += VOLUME_DIFF_RATE * 3;
                     if (volume > VOLUME_MAX) {
@@ -278,9 +276,7 @@ public class MainWindow extends javax.swing.JFrame {
                     System.out.println("Volume: " + volume);
                     break;
                 case ',':
-                    System.out.println("Volume: " + volume);
                 case ';':
-                    System.out.println("Volume: " + volume);
                     volume -= VOLUME_DIFF_RATE * 3;
                     if (volume < VOLUME_MIN) {
                         volume = VOLUME_MIN;
@@ -297,13 +293,6 @@ public class MainWindow extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        Pattern pattern;
-        Player player = new Player();
-        pattern = new Pattern("A6");
-        player.play(pattern);
-        pattern = new Pattern("A7");
-        player.play(pattern);
-        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
