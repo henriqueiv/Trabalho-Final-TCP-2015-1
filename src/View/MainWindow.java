@@ -28,18 +28,13 @@ import org.jfugue.*;
  */
 public class MainWindow extends javax.swing.JFrame {
 
-    public static enum Volume {
-
-        MUTE, LOW, MEDIUM, HIGH
-    }
-
     private static boolean vol = false;
     public static final int INITIAL_OCTAVE = 5;
     public static final int VOLUME_DIFF_RATE = 500;
     public static final int VOLUME_START = 10200;
     public static final int VOLUME_MIN = 8000;
     public static final int VOLUME_MAX = 16383;
-    public static char lastNote;
+    public static char lastChar;
     public static char lastValidNotePlayed;
 
     /**
@@ -51,7 +46,6 @@ public class MainWindow extends javax.swing.JFrame {
         this.setLocation(dim.width / 2 - this.getSize().width / 2,
                 dim.height / 2 - this.getSize().height / 2);
         this.setTitle("TF2_TCP");
-
     }
 
     /**
@@ -67,7 +61,6 @@ public class MainWindow extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         taTextContent = new javax.swing.JTextArea();
         tfFilePath = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -97,13 +90,6 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         jButton2.setText("jButton2");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,9 +107,7 @@ public class MainWindow extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                         .addComponent(jButton2)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton1)
-                        .addGap(57, 57, 57)
+                        .addGap(148, 148, 148)
                         .addComponent(btnPlay))
                     .addComponent(tfFilePath)
                     .addComponent(jScrollPane1))
@@ -139,7 +123,6 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPlay)
-                    .addComponent(jButton1)
                     .addComponent(jButton2))
                 .addContainerGap())
         );
@@ -214,27 +197,6 @@ public class MainWindow extends javax.swing.JFrame {
     private void tfFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFilePathActionPerformed
     }//GEN-LAST:event_tfFilePathActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Player player = new Player();
-        String strValidChar = "ABCDEFG";
-        Pattern pattern;
-        String str = taTextContent.getText();
-        for (int i = 0; i < str.length(); i++) {
-            char c = Character.toUpperCase(str.charAt(i));
-            if (strValidChar.indexOf(c) >= 0) {
-                pattern = new Pattern(Character.toString(c));
-                player.play(pattern);
-                System.out.println("sim: " + c);
-            }
-            if (c == '!') {
-
-            } else {
-                System.out.println("nao: " + c);
-            }
-        }
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         /* TODO(pedro): 
          1 - Verificar como manter a ultima nota VÁLIDA tocada.
@@ -243,25 +205,27 @@ public class MainWindow extends javax.swing.JFrame {
         Player player = new Player();
         Pattern pattern;
         String digitValidChar = "0123456789";
+        String strValidChar = "ABCDEFG";
         String vogal = "IOU";
         String str = taTextContent.getText();
         String oct = "";
         int volume = VOLUME_START;
         int octave = INITIAL_OCTAVE;
         for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);      
-            // Se for um digito, verificar se eh par ou impar
-            if (digitValidChar.indexOf(c) >= 0) {
-                int isEven = (int) c;
-                if (isEven % 2 == 0 && octave < 9) { // se eh par
-                    // Devemos aumentar uma oitava(0-9 / sendo o padrao 5)
-                    octave++;
-                    oct = octave + "";
-                } else if (isEven % 2 != 0 && octave > 0) {
-                    // devemos diminuir uma oitava(0-9 / sendo o padrao 5)
-                    octave--;
-                    oct = octave + "";
+            char c = str.charAt(i);
+            if (Character.isDigit(c)) {
+                boolean isEven = (c % 2 == 0);
+                if (isEven) {
+                    if (octave < 9) {
+                        octave++;
+                    }
+                } else {
+                    if (octave > 1) {
+                        octave--;
+                    }
                 }
+                //System.out.println("Octave: " + octave);
+                oct = octave + "";
             }
             c = Character.toUpperCase(c);   
             switch (c){
@@ -272,7 +236,6 @@ public class MainWindow extends javax.swing.JFrame {
                     if (volume > VOLUME_MAX) {
                         volume = VOLUME_MAX;
                     }
-                    System.out.println("Volume: " + volume);
                     break;
                 case ',':
                 case ';':
@@ -280,18 +243,20 @@ public class MainWindow extends javax.swing.JFrame {
                     if (volume < VOLUME_MIN) {
                         volume = VOLUME_MIN;
                     }
-                    System.out.println("Volume: " + volume);
                     break;
                 default:
                     break;
             }
             if (vogal.indexOf(c) >= 0) {
-                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastNote) + oct);
+                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
                 player.play(pattern);
             }
-            pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c) + oct);
-            player.play(pattern);
-            lastNote = c;   
+            if (strValidChar.indexOf(c) >= 0) {
+                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c) + oct);
+                player.play(pattern);
+                lastValidNotePlayed = c;
+            }
+            lastChar = c; // TESTE   
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -328,7 +293,6 @@ public class MainWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnPlay;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea taTextContent;
