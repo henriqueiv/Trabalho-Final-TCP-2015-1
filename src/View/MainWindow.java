@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controller.SoundManagerController;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
@@ -18,24 +19,15 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.jfugue.*;
-//import org.jfugue.pattern.Pattern;
-//import org.jfugue.player.Player;
-//import org.jfugue.temporal.TemporalEvents;
+
 
 /**
  *
  * @author valcanaia
  */
 public class MainWindow extends javax.swing.JFrame {
-
-    private static boolean vol = false;
-    public static final int INITIAL_OCTAVE = 5;
-    public static final int VOLUME_DIFF_RATE = 500;
-    public static final int VOLUME_START = 10200;
-    public static final int VOLUME_MIN = 8000;
-    public static final int VOLUME_MAX = 16383;
-    public static char lastChar;
-    public static char lastValidNotePlayed;
+ 
+    public SoundManagerController smc;
 
     /**
      * Creates new form MainWindow
@@ -46,6 +38,7 @@ public class MainWindow extends javax.swing.JFrame {
         this.setLocation(dim.width / 2 - this.getSize().width / 2,
                 dim.height / 2 - this.getSize().height / 2);
         this.setTitle("TF2_TCP");
+        smc = new SoundManagerController();
     }
 
     /**
@@ -57,20 +50,12 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnPlay = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         taTextContent = new javax.swing.JTextArea();
         tfFilePath = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        btnPlay.setText("Play text");
-        btnPlay.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPlayActionPerformed(evt);
-            }
-        });
 
         taTextContent.setColumns(20);
         taTextContent.setRows(5);
@@ -90,7 +75,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("jButton2");
+        jButton2.setText("Play text");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -104,13 +89,11 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(148, 148, 148)
-                        .addComponent(btnPlay))
                     .addComponent(tfFilePath)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -120,19 +103,13 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(tfFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnPlay)
-                    .addComponent(jButton2))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2)
+                .addGap(6, 6, 6))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnPlayActionPerformed
 
     private void tfFilePathMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tfFilePathMouseClicked
         JFileChooser fc = new JFileChooser();
@@ -197,67 +174,10 @@ public class MainWindow extends javax.swing.JFrame {
     private void tfFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfFilePathActionPerformed
     }//GEN-LAST:event_tfFilePathActionPerformed
 
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        /* TODO(pedro): 
-         1 - Verificar como manter a ultima nota VÁLIDA tocada.
-         */
-        Controller controller = new Controller();
-        Player player = new Player();
-        Pattern pattern;
-        String digitValidChar = "0123456789";
-        String strValidChar = "ABCDEFG";
-        String vogal = "IOU";
         String str = taTextContent.getText();
-        String oct = "";
-        int volume = VOLUME_START;
-        int octave = INITIAL_OCTAVE;
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if (Character.isDigit(c)) {
-                boolean isEven = (c % 2 == 0);
-                if (isEven) {
-                    if (octave < 9) {
-                        octave++;
-                    }
-                } else {
-                    if (octave > 1) {
-                        octave--;
-                    }
-                }
-                //System.out.println("Octave: " + octave);
-                oct = octave + "";
-            }
-            c = Character.toUpperCase(c);   
-            switch (c){
-                case '!':
-                case '.':
-                case '?':
-                    volume += VOLUME_DIFF_RATE * 3;
-                    if (volume > VOLUME_MAX) {
-                        volume = VOLUME_MAX;
-                    }
-                    break;
-                case ',':
-                case ';':
-                    volume -= VOLUME_DIFF_RATE * 3;
-                    if (volume < VOLUME_MIN) {
-                        volume = VOLUME_MIN;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            if (vogal.indexOf(c) >= 0) {
-                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
-                player.play(pattern);
-            }
-            if (strValidChar.indexOf(c) >= 0) {
-                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c) + oct);
-                player.play(pattern);
-                lastValidNotePlayed = c;
-            }
-            lastChar = c; // TESTE   
-        }
+        smc.playText(str);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -292,7 +212,6 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnPlay;
     private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea taTextContent;
