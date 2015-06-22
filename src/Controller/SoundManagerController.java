@@ -11,136 +11,94 @@ import org.jfugue.Player;
  * @author Pedro Cantarutti
  */
 public class SoundManagerController {
-    
+
     private Note note;
     private Controller controller;
     private Player player;
     private Pattern pattern;
-    
+    private String strValidChar = "ABCDEFG";
+    private String vogal = "IOU";
+    private int volume = VOLUME_START;
+    private int octave = INITIAL_OCTAVE;
+    private String oct = "";
+
     // Constants
     private static final int INITIAL_OCTAVE = 5;
     private static final int VOLUME_DIFF_RATE = 500;
     private static final int VOLUME_START = 10200;
     private static final int VOLUME_MIN = 8000;
     private static final int VOLUME_MAX = 16383;
-    
-    private static char lastValidNotePlayed;
-    
-    private static boolean vol = false;
 
+    private static char lastValidNotePlayed;
+
+    private static boolean vol = false;
 
     public SoundManagerController() {
         controller = new Controller();
         player = new Player();
     }
-    
-    public void playText(String str) {
-//        String strValidChar = "ABCDEFG";
-//        String vogal = "IOU";
-//        int volume = VOLUME_START;
-//        int octave = INITIAL_OCTAVE;
-//        String oct = "";
-        for (int i = 0; i < str.length(); i++) { 
-            char c = str.charAt(i);
-            player.play(generatePattern(c));
 
-//            if (Character.isDigit(c)) {
-//                boolean isEven = (c % 2 == 0);
-//                if (isEven) {
-//                    if (octave < 9) {
-//                        octave++;
-//                    }
-//                } else {
-//                    if (octave > 1) {
-//                        octave--;
-//                    }
-//                }
-//                oct = octave + "";
-//            }
-//            System.out.println("oct: " + oct);
-//            c = Character.toUpperCase(c);   
-//            switch (c){
-//                case '!':
-//                case '.':
-//                case '?':
-//                    volume += VOLUME_DIFF_RATE * 3;
-//                    if (volume > VOLUME_MAX) {
-//                        volume = VOLUME_MAX;
-//                    }
-//                    break;
-//                case ',':
-//                case ';':
-//                    volume -= VOLUME_DIFF_RATE * 3;
-//                    if (volume < VOLUME_MIN) {
-//                        volume = VOLUME_MIN;
-//                    }
-//                    break;
-//                default:
-//                    break;
-//            }
-//            if (vogal.indexOf(c) >= 0) {
-//                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
-//                player.play(pattern);
-//            }
-//            if (strValidChar.indexOf(c) >= 0) {
-//                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
-//                player.play(pattern);
-//                lastValidNotePlayed = c;
-//            }
+    public void playText(String str) {
+        String strPattern;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            strPattern = this.generateStringPattern(c);
+            System.out.println(strPattern);
+            if (strPattern.length() > 0) {
+                player.play(new Pattern(strPattern));
+            }
         }
     }
-    
-        // TODO: Verificar usabilidade
-    public Pattern generatePattern(char c) {
-        String strValidChar = "ABCDEFG";
-        String vogal = "IOU";
-        int volume = VOLUME_START;
-        int octave = INITIAL_OCTAVE;
-        String oct = "";
+
+    // TODO: Verificar usabilidade
+    private String generateStringPattern(char c) {
         if (Character.isDigit(c)) {
             boolean isEven = (c % 2 == 0);
             if (isEven) {
-                if (octave < 9) {
-                    octave++;
+                if (this.octave < 9) {
+                    this.octave++;
                 }
             } else {
-                if (octave > 1) {
-                    octave--;
+                if (this.octave > 1) {
+                    this.octave--;
                 }
             }
-            oct = octave + "";
-        }
-        System.out.println("oct: " + oct);
-        c = Character.toUpperCase(c);
-        switch (c) {
-            case '!':
-            case '.':
-            case '?':
-                volume += VOLUME_DIFF_RATE * 3;
-                if (volume > VOLUME_MAX) {
-                    volume = VOLUME_MAX;
-                }
-                break;
-            case ',':
-            case ';':
-                volume -= VOLUME_DIFF_RATE * 3;
-                if (volume < VOLUME_MIN) {
-                    volume = VOLUME_MIN;
-                }
-                break;
-            default:
-                break;
-        }
-        if (vogal.indexOf(c) >= 0) {
-            pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
-            return pattern;
-        }
-        if (strValidChar.indexOf(c) >= 0) {
-            pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
-            lastValidNotePlayed = c;
-            return pattern;
-        }
+            this.oct = this.octave + "";
+            return "";
+        } else {
+            System.out.println("oct: " + oct);
+            c = Character.toUpperCase(c);
+            switch (c) {
+                case '!':
+                case '.':
+                case '?':
+                    volume += VOLUME_DIFF_RATE * 3;
+                    if (volume > VOLUME_MAX) {
+                        volume = VOLUME_MAX;
+                    }
+                    break;
+                case ',':
+                case ';':
+                    volume -= VOLUME_DIFF_RATE * 3;
+                    if (volume < VOLUME_MIN) {
+                        volume = VOLUME_MIN;
+                    }
+                    break;
+                default: {
+                    if (vogal.indexOf(c) >= 0) {
+                        pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(this.lastValidNotePlayed) + oct);
+                        return pattern.toString();
+                    }
+                    if (strValidChar.indexOf(c) >= 0) {
+                        pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(c) + oct);
+                        lastValidNotePlayed = c;
+                        return pattern.toString();
+                    }
 
-        return pattern;
+                    return pattern.toString();
+                }
+            }
+            return "";
+        }
     }
 }
