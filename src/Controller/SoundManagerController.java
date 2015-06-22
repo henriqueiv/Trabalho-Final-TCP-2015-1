@@ -35,58 +35,58 @@ public class SoundManagerController {
     }
     
     public void playText(String str) {
-        String strValidChar = "ABCDEFG";
-        String vogal = "IOU";
-        int volume = VOLUME_START;
-        int octave = INITIAL_OCTAVE;
-        String oct = "";
+//        String strValidChar = "ABCDEFG";
+//        String vogal = "IOU";
+//        int volume = VOLUME_START;
+//        int octave = INITIAL_OCTAVE;
+//        String oct = "";
         for (int i = 0; i < str.length(); i++) { 
             char c = str.charAt(i);
-//            player.play(generatePattern(c));
+            player.play(generatePattern(c));
 
-            if (Character.isDigit(c)) {
-                boolean isEven = (c % 2 == 0);
-                if (isEven) {
-                    if (octave < 9) {
-                        octave++;
-                    }
-                } else {
-                    if (octave > 1) {
-                        octave--;
-                    }
-                }
-                oct = octave + "";
-            }
-            System.out.println("oct: " + oct);
-            c = Character.toUpperCase(c);   
-            switch (c){
-                case '!':
-                case '.':
-                case '?':
-                    volume += VOLUME_DIFF_RATE * 3;
-                    if (volume > VOLUME_MAX) {
-                        volume = VOLUME_MAX;
-                    }
-                    break;
-                case ',':
-                case ';':
-                    volume -= VOLUME_DIFF_RATE * 3;
-                    if (volume < VOLUME_MIN) {
-                        volume = VOLUME_MIN;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            if (vogal.indexOf(c) >= 0) {
-                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
-                player.play(pattern);
-            }
-            if (strValidChar.indexOf(c) >= 0) {
-                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
-                player.play(pattern);
-                lastValidNotePlayed = c;
-            }
+//            if (Character.isDigit(c)) {
+//                boolean isEven = (c % 2 == 0);
+//                if (isEven) {
+//                    if (octave < 9) {
+//                        octave++;
+//                    }
+//                } else {
+//                    if (octave > 1) {
+//                        octave--;
+//                    }
+//                }
+//                oct = octave + "";
+//            }
+//            System.out.println("oct: " + oct);
+//            c = Character.toUpperCase(c);   
+//            switch (c){
+//                case '!':
+//                case '.':
+//                case '?':
+//                    volume += VOLUME_DIFF_RATE * 3;
+//                    if (volume > VOLUME_MAX) {
+//                        volume = VOLUME_MAX;
+//                    }
+//                    break;
+//                case ',':
+//                case ';':
+//                    volume -= VOLUME_DIFF_RATE * 3;
+//                    if (volume < VOLUME_MIN) {
+//                        volume = VOLUME_MIN;
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//            if (vogal.indexOf(c) >= 0) {
+//                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
+//                player.play(pattern);
+//            }
+//            if (strValidChar.indexOf(c) >= 0) {
+//                pattern = new Pattern(" X[Volume]=" + volume + " " + Character.toString(lastValidNotePlayed) + oct);
+//                player.play(pattern);
+//                lastValidNotePlayed = c;
+//            }
         }
     }
     
@@ -141,6 +141,6 @@ public class SoundManagerController {
             return pattern;
         }
 
-        return pattern = new Pattern("");
+        return pattern;
     }
 }
