@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 import Controller.SoundManagerController;
@@ -18,12 +13,12 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.jfugue.*;
 
 
 /**
  *
- * @author valcanaia
+ * @author Henrique Valcanaia
+ * @author Pedro Cantarutti
  */
 public class MainWindow extends javax.swing.JFrame {
  
@@ -205,6 +200,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new MainWindow().setVisible(true);
             }
