@@ -1,6 +1,5 @@
 package Controller;
 
-import Model.Note;
 import org.jfugue.Controller;
 import org.jfugue.Pattern;
 import org.jfugue.Player;
@@ -17,7 +16,6 @@ public class SoundManagerController {
     private final String strValidChar = "ABCDEFG";
     private final String vogal = "IOU";
     private Pattern pattern;
-    private Note note;
     private int volume = VOLUME_START;
     private int octave = INITIAL_OCTAVE;
     private String oct = "";
