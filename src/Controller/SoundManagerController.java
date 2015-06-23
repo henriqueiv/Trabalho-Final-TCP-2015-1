@@ -12,12 +12,12 @@ import org.jfugue.Player;
  */
 public class SoundManagerController {
 
-    private Note note;
-    private Controller controller;
-    private Player player;
+    private final Controller controller;
+    private final Player player;
+    private final String strValidChar = "ABCDEFG";
+    private final String vogal = "IOU";
     private Pattern pattern;
-    private String strValidChar = "ABCDEFG";
-    private String vogal = "IOU";
+    private Note note;
     private int volume = VOLUME_START;
     private int octave = INITIAL_OCTAVE;
     private String oct = "";
@@ -30,8 +30,6 @@ public class SoundManagerController {
     private static final int VOLUME_MAX = 16383;
 
     private static char lastValidNotePlayed;
-
-    private static boolean vol = false;
 
     public SoundManagerController() {
         controller = new Controller();
@@ -50,7 +48,6 @@ public class SoundManagerController {
         }
     }
 
-    // TODO: Verificar usabilidade
     private String generateStringPattern(char c) {
         if (Character.isDigit(c)) {
             boolean isEven = (c % 2 == 0);
